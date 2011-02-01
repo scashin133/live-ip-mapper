@@ -23,7 +23,6 @@
       }
     })
     
-    var markerCache = [];
     
     if ((options.latitude !== null || options.latitude !== undefined) && (options.longitude !== null || options.longitude !== undefined)) {
       map.setCenter((new google.maps.LatLng(options.latitude, options.longitude)));
@@ -31,15 +30,8 @@
     function addMarker(markerOptions){
       var marker;
       
-      if(markerCache.length > 50) {
-        var staleMarker = markerCache.pop();
-        console.log(staleMarker);
-        google.maps.event.clearListeners(staleMarker, 'click');
-        staleMarker.setMap(null);        
-        delete staleMarker;
-      }
       marker = new google.maps.Marker(markerOptions);
-      markerCache.push(marker);
+
       marker.setAnimation(google.maps.Animation.DROP);
       if(markerOptions.html !== undefined){
         var infowindow = new google.maps.InfoWindow();
@@ -53,6 +45,12 @@
         });
       }
       marker.setMap(map);
+      setTimeout(function() {
+        console.log(marker);
+        google.maps.event.clearListeners(marker, 'click');
+        marker.setMap(null);        
+        delete marker;
+      }, 2000);
     }
     this.addMarker = function(data){
       for(i=0;i<data.length;i++) {

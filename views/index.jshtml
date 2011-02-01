@@ -20,7 +20,7 @@
           markerOptions.latitude = ga.latitude;
           setTimeout(function() {
             $('#analyticsmap').data('amap').addMarker([markerOptions]);
-          }, 1000);
+          }, 150);
           
         });
     });
