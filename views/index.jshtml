@@ -1,0 +1,30 @@
+<%= render('header') %>
+<h1>Socialcast Live Traffic</h1>
+<div class="main_content">
+  <div id="analyticsmap"></div>
+  <script type="text/javascript">
+    $(function() {
+        $('#analyticsmap').amap({
+          longitude: -122.392975,
+          latitude: 37.78233,
+          zoom: 2
+        });
+        var socket = new io.Socket();
+        socket.connect();
+        socket.on('message', function(obj){
+          var ga = obj;
+          var markerOptions = {};
+          markerOptions.title = ga.ip;
+          markerOptions.html = "<b>" + ga.ip + "</b> " + ga.city + ", " + ga.region_name + " " + ga.country_name ;
+          markerOptions.longitude = ga.longitude;
+          markerOptions.latitude = ga.latitude;
+          setTimeout(function() {
+            $('#analyticsmap').data('amap').addMarker([markerOptions]);
+          }, 1000);
+          
+        });
+    });
+  </script>
+</div>
+
+<%= render('footer') %>
