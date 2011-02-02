@@ -8,6 +8,10 @@ var io = require('socket.io');
 var freegeoip = http.createClient(8888, '127.0.0.1');
 
   meryl.p(Connect.staticProvider({root: 'public'}));
+  
+  meryl.p('GET /', Connect.basicAuth(function(user, pass){
+    return 'socialcast' == user && 'P@ssw0rdL33t' == pass;
+  }));
 
   meryl.h('GET /', function (req, resp) {
     resp.render('index');
