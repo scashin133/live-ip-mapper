@@ -5,7 +5,7 @@ var http = require('http');
 var json = require('json');
 var io = require('socket.io');
 
-var freegeoip = http.createClient(80, '67.23.47.116');
+var freegeoip = http.createClient(8888, '127.0.0.1');
 
   meryl.p(Connect.staticProvider({root: 'public'}));
 
@@ -17,7 +17,7 @@ var freegeoip = http.createClient(80, '67.23.47.116');
     var postdataAsObject = qs.parse(req.postdata.toString());
     if (postdataAsObject && postdataAsObject.ip) {
       
-      var request = freegeoip.request('GET', '/json/' + postdataAsObject.ip, {'host': 'freegeoip.net'});
+      var request = freegeoip.request('GET', '/json/' + postdataAsObject.ip, {'host': 'localhost'});
       var geoip = '';
       request.end();
       request.on('response', function (response) {
