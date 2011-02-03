@@ -50,7 +50,7 @@
         google.maps.event.clearListeners(marker, 'click');
         marker.setMap(null);        
         delete marker;
-      }, 2000);
+      }, 1000);
     }
     this.addMarker = function(data){
       for(i=0;i<data.length;i++) {

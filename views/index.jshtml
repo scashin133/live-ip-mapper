@@ -18,10 +18,7 @@
           markerOptions.html = "<b>" + ga.ip + "</b> " + ga.city + ", " + ga.region_name + " " + ga.country_name ;
           markerOptions.longitude = ga.longitude;
           markerOptions.latitude = ga.latitude;
-          setTimeout(function() {
-            $('#analyticsmap').data('amap').addMarker([markerOptions]);
-          }, 150);
-          
+          $('#analyticsmap').data('amap').addMarker([markerOptions]);
         });
     });
   </script>
