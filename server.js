@@ -20,6 +20,7 @@ meryl.h('POST /ip', function (req, resp) {
   var postdataAsObject = qs.parse(req.postdata.toString());
   if (postdataAsObject && postdataAsObject.ip) {
     geoip.search(postdataAsObject.ip, 0, geoip.total, 0, 0, function(geo){
+      geo.ip = postdataAsObject.ip;
       socket.broadcast(geo);
     });
   }
