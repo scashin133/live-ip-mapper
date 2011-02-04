@@ -4,42 +4,36 @@ var meryl = require('meryl'),
 var http = require('http');
 var json = require('json');
 var io = require('socket.io');
+var geoip = require('./lib/geoip');
 
-var freegeoip = http.createClient(8888, '127.0.0.1');
+var g = new Geoip({});
 
-  meryl.p(Connect.staticProvider({root: 'public'}));
-  
-  meryl.p('GET /', Connect.basicAuth(function(user, pass){
-    return 'socialcast' == user && 'P@ssw0rdL33t' == pass;
-  }));
+meryl.p(Connect.staticProvider({root: 'public'}));
 
-  meryl.h('GET /', function (req, resp) {
-    resp.render('index');
-  });
+meryl.p('GET /', Connect.basicAuth(function(user, pass){
+  return 'socialcast' == user && 'P@ssw0rdL33t' == pass;
+}));
 
-  meryl.h('POST /ip', function (req, resp) {
-    var postdataAsObject = qs.parse(req.postdata.toString());
-    if (postdataAsObject && postdataAsObject.ip) {
-      
-      var request = freegeoip.request('GET', '/json/' + postdataAsObject.ip, {'host': 'localhost'});
-      var geoip = '';
-      request.end();
-      request.on('response', function (response) {
-        response.on('data', function (chunk) {
-          geoip += chunk;
-        });
-        response.on('end', function(){
-          jsonBody = JSON.parse(geoip);
-          socket.broadcast(jsonBody);
-        });
+meryl.h('GET /', function (req, resp) {
+  resp.render('index');
+});
+
+meryl.h('POST /ip', function (req, resp) {
+  var postdataAsObject = qs.parse(req.postdata.toString());
+  if (postdataAsObject && postdataAsObject.ip) {
+    g.on('ready', function(){
+      g.search(postdataAsObject.ip, 0, g.total, 0, 0, function(geo){
+        socket.broadcast(geo);
       });
-    }
-    resp.redirect('/');
-  });
+    });
+  }
+  resp.status = 204;
+  resp.send();
+});
 
-  var server = http.createServer(meryl.cgi({templateDir: 'views'}));
-  server.listen(3000);
-  var socket = io.listen(server);
-  socket.on('connection', function(client){});
+var server = http.createServer(meryl.cgi({templateDir: 'views'}));
+server.listen(3000);
+var socket = io.listen(server);
+socket.on('connection', function(client){});
 
-  console.log('listening...');
+console.log('listening...');
