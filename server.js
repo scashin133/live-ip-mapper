@@ -4,7 +4,7 @@ var meryl = require('meryl'),
 var http = require('http');
 var json = require('json');
 var io = require('socket.io');
-var geoip = require('./lib/geoip');
+var geoip = require('./lib/geoip').createClient({});
 
 var g = new Geoip({});
 
@@ -21,10 +21,8 @@ meryl.h('GET /', function (req, resp) {
 meryl.h('POST /ip', function (req, resp) {
   var postdataAsObject = qs.parse(req.postdata.toString());
   if (postdataAsObject && postdataAsObject.ip) {
-    g.on('ready', function(){
-      g.search(postdataAsObject.ip, 0, g.total, 0, 0, function(geo){
-        socket.broadcast(geo);
-      });
+    g.search(postdataAsObject.ip, 0, g.total, 0, 0, function(geo){
+      socket.broadcast(geo);
     });
   }
   resp.status = 204;
