@@ -19,10 +19,8 @@ meryl.h('GET /', function (req, resp) {
 meryl.h('POST /ip', function (req, resp) {
   var postdataAsObject = qs.parse(req.postdata.toString());
   if (postdataAsObject && postdataAsObject.ip) {
-    geoip.on('ready', function(){
-      geoip.search(postdataAsObject.ip, 0, geoip.total, 0, 0, function(geo){
-        socket.broadcast(geo);
-      });
+    geoip.search(postdataAsObject.ip, 0, geoip.total, 0, 0, function(geo){
+      socket.broadcast(geo);
     });
   }
   resp.status = 204;
